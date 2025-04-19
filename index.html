@@ -1,2 +1,99 @@
 <!DOCTYPE html>
-<!-- Skipping full content here due to length; we'll re-grab from the canvas state -->
+<html lang="en">
+<head>
+  <meta name="description" content="An interactive dashboard exposing the links between Russian disinformation campaigns and affiliated Canadian conservative media and political groups. Includes timeline analysis, bot activity, narrative tracking, and more.">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disinfo Influence Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.1.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.23.0/dist/cytoscape.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.4.0/cytoscape-dagre.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #1c1f26, #3a3f4b);
+      color: #e4e4e4;
+    }
+    header { background-color: #2a2f4a; color: white; padding: 1rem; text-align: center; }
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #1e2233;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: white;
+      padding: 0.75rem 1rem;
+      text-decoration: none;
+      display: inline-block;
+    }
+    nav a:hover { background-color: #3a4059; }
+    section {
+      padding: 1rem 2rem;
+      max-width: 1200px;
+      margin: auto;
+      background-color: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    h2 {
+      color: #ffffff;
+      border-bottom: 2px solid #555;
+      padding-bottom: 0.5rem;
+    }
+    canvas {
+      width: 100%;
+      max-width: 100%;
+      background-color: #1c1f26;
+      border-radius: 8px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.3);
+    }
+    textarea {
+      width: 100%;
+      max-width: 100%;
+      background-color: #2a2f4a;
+      color: #e4e4e4;
+      border: 1px solid #444;
+      border-radius: 5px;
+      padding: 0.5rem;
+    }
+    button {
+      background-color: #2a2f4a;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #3f456a;
+    }
+    @media (max-width: 768px) {
+      textarea { width: 100% !important; }
+      nav { flex-direction: column; }
+    }
+    .kpi-container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      gap: 1rem;
+    }
+    .kpi {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem 2rem;
+      border: 1px solid #444;
+      border-radius: 10px;
+      flex: 1 1 200px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    }
+    .kpi h3 {
+      margin: 0.5rem 0;
+      font-size: 1.5rem;
+      color: #ffffff;
+    }
+  </style>
+</head>
