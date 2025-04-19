@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disinfo Influence Dashboard</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f9f9f9; }
+    header { background-color: #2a2f4a; color: white; padding: 1rem; text-align: center; }
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #1e2233;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: white;
+      padding: 0.75rem 1rem;
+      text-decoration: none;
+      display: inline-block;
+    }
+    nav a:hover { background-color: #3a4059; }
+    section { padding: 1rem 2rem; max-width: 1200px; margin: auto; }
+    h2 { color: #2a2f4a; }
+    canvas, textarea { width: 100%; max-width: 100%; }
+    button { background-color: #2a2f4a; color: white; border: none; cursor: pointer; }
+    button:hover { background-color: #3f456a; }
+    @media (max-width: 768px) {
+      textarea { width: 100% !important; }
+      nav { flex-direction: column; }
+    }
+    .kpi-container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      gap: 1rem;
+    }
+    .kpi {
+      background: #fff;
+      padding: 1rem 2rem;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      flex: 1 1 200px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .kpi h3 { margin: 0.5rem 0; font-size: 1.5rem; color: #2a2f4a; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Russian-CPC Disinformation Influence Dashboard</h1>
+  </header>
+  <nav>
+    <a href="#network">Network</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#bots">Bots</a>
+    <a href="#sankey">Flow</a>
+    <a href="#nlp">NLP Tool</a>
+    <a href="#export">Export</a>
+  </nav>
+  <section class="kpi-container">
+    <div class="kpi">
+      <strong>Total Bot Accounts</strong>
+      <h3>198+</h3>
+    </div>
+    <div class="kpi">
+      <strong>Peak Disinfo Surge</strong>
+      <h3>Week 3</h3>
+    </div>
+    <div class="kpi">
+      <strong>Top Repeated Domain</strong>
+      <h3>globalresearch.ca</h3>
+    </div>
+    <div class="kpi">
+      <strong>Similarity Alert (Live)</strong>
+      <h3>84%</h3>
+    </div>
+  </section>
+</body>
+</html>
