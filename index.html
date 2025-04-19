@@ -118,7 +118,87 @@
     <p>This dashboard tracks disinformation and propaganda flows from Russian-affiliated sources into Canadian conservative political circles. <span class="tooltip-icon" data-tippy-content="A visual representation of the connections between various entities.">What is the Network Graph?</span> | <span class="tooltip-icon" data-tippy-content="Shows narrative trends and major events.">Timeline Explanation</span> | <span class="tooltip-icon" data-tippy-content="Measures similarity between narratives using NLP algorithms.">About NLP Tool</span></p>
   </section>
 
-  <footer>
+  <section id="network">
+  <h2>Network Graph</h2>
+  <div id="cy" style="height: 400px;"></div>
+</section>
+
+<section id="timeline">
+  <h2>Narrative Timeline</h2>
+  <canvas id="timelineChart" height="200"></canvas>
+</section>
+
+<section id="bots">
+  <h2>Bot Activity Heatmap</h2>
+  <canvas id="botHeatmap" height="200"></canvas>
+</section>
+
+<section id="sankey">
+  <h2>Sankey Flow Diagram</h2>
+  <iframe width="100%" height="400" style="border:0;" srcdoc='<html><body style="margin:0;overflow:hidden"><div style="color:#aaa;font-family:sans-serif;text-align:center;padding-top:100px;">Sankey diagram placeholder</div></body></html>'></iframe>
+</section>
+
+<section id="nlp">
+  <h2>NLP Narrative Similarity Tool</h2>
+  <form style="display: flex; gap: 1rem; flex-wrap: wrap;">
+    <textarea placeholder="Paste Kremlin narrative..." style="flex: 1 1 45%; height: 150px;"></textarea>
+    <textarea placeholder="Paste CPC-aligned message..." style="flex: 1 1 45%; height: 150px;"></textarea>
+    <button type="button" style="margin-top: 1rem;">Compare</button>
+  </form>
+</section>
+
+<section id="export">
+  <h2>Export Tools</h2>
+  <button onclick="window.print()">🖨️ Print / Save as PDF</button>
+</section>
+
+<script>
+  const cy = cytoscape({
+    container: document.getElementById('cy'),
+    elements: [
+      { data: { id: 'RT' } },
+      { data: { id: 'GlobalResearch' } },
+      { data: { id: 'CanadaProud' } },
+      { data: { source: 'RT', target: 'GlobalResearch' } },
+      { data: { source: 'GlobalResearch', target: 'CanadaProud' } }
+    ],
+    style: [
+      { selector: 'node', style: { 'label': 'data(id)', 'background-color': '#4caf50', 'color': '#fff' } },
+      { selector: 'edge', style: { 'line-color': '#ccc', 'width': 2 } }
+    ],
+    layout: { name: 'circle' }
+  });
+
+  new Chart(document.getElementById('timelineChart'), {
+    type: 'line',
+    data: {
+      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+      datasets: [{
+        label: 'Narrative Spike',
+        data: [10, 30, 75, 40],
+        borderColor: 'rgba(255, 255, 255, 0.85)',
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        fill: true,
+        tension: 0.4
+      }]
+    },
+    options: { responsive: true }
+  });
+
+  new Chart(document.getElementById('botHeatmap'), {
+    type: 'bar',
+    data: {
+      labels: ['12AM', '3AM', '6AM', '9AM', '12PM', '3PM', '6PM', '9PM'],
+      datasets: [{
+        label: 'Bot Posts',
+        data: [5, 8, 12, 25, 30, 40, 38, 22],
+        backgroundColor: 'rgba(255, 99, 132, 0.7)'
+      }]
+    },
+    options: { responsive: true }
+  });
+</script>
+<footer>
     <p>&copy; 2024 Disinfo Influence Dashboard | Data sources: <a href="https://informationlaundromat.com" target="_blank">Information Laundromat</a>, <a href="https://pressprogress.ca" target="_blank">PressProgress</a> | <a href="#">Feedback</a></p>
   </footer>
 
