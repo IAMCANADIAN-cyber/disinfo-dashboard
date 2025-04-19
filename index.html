@@ -9,6 +9,9 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.1.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.23.0/dist/cytoscape.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.4.0/cytoscape-dagre.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/light.css">
   <style>
     * { box-sizing: border-box; }
     body {
@@ -95,5 +98,38 @@
       font-size: 1.5rem;
       color: #ffffff;
     }
+    footer { text-align: center; padding: 1rem; background-color: #1e2233; color: #e4e4e4; }
+    footer a { color: #6ca0dc; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .tooltip-icon { cursor: pointer; border-bottom: 1px dotted #fff; color: #fff; font-weight: bold; }
   </style>
 </head>
+<body>
+  <header>
+    <h1>Disinfo Influence Dashboard</h1>
+  </header>
+
+  <nav>
+    <a href="#">Home</a>
+  </nav>
+
+  <section>
+    <h2>About This Dashboard</h2>
+    <p>This dashboard tracks disinformation and propaganda flows from Russian-affiliated sources into Canadian conservative political circles. <span class="tooltip-icon" data-tippy-content="A visual representation of the connections between various entities.">What is the Network Graph?</span> | <span class="tooltip-icon" data-tippy-content="Shows narrative trends and major events.">Timeline Explanation</span> | <span class="tooltip-icon" data-tippy-content="Measures similarity between narratives using NLP algorithms.">About NLP Tool</span></p>
+  </section>
+
+  <footer>
+    <p>&copy; 2024 Disinfo Influence Dashboard | Data sources: <a href="https://informationlaundromat.com" target="_blank">Information Laundromat</a>, <a href="https://pressprogress.ca" target="_blank">PressProgress</a> | <a href="#">Feedback</a></p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof tippy !== 'undefined') {
+        tippy('.tooltip-icon', { theme: 'light', animation: 'scale' });
+      } else {
+        console.error('Tippy.js failed to load');
+      }
+    });
+  </script>
+</body>
+</html>
