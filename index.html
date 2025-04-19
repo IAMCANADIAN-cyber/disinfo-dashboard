@@ -1,6 +1,8 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta name="description" content="Dashboard tracking Russian disinformation and its influence across Canadian conservative networks. Featuring bot detection, Sankey flows, and semantic alignment tools.">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Disinfo Influence Dashboard</title>
@@ -8,7 +10,13 @@
   <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.23.0/dist/cytoscape.min.js"></script>
   <style>
     * { box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f9f9f9; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #1c1f26, #3a3f4b);
+      color: #e4e4e4;
+    }
     header { background-color: #2a2f4a; color: white; padding: 1rem; text-align: center; }
     nav {
       display: flex;
@@ -23,11 +31,44 @@
       display: inline-block;
     }
     nav a:hover { background-color: #3a4059; }
-    section { padding: 1rem 2rem; max-width: 1200px; margin: auto; }
-    h2 { color: #2a2f4a; }
-    canvas, textarea { width: 100%; max-width: 100%; }
-    button { background-color: #2a2f4a; color: white; border: none; cursor: pointer; }
-    button:hover { background-color: #3f456a; }
+    section {
+      padding: 1rem 2rem;
+      max-width: 1200px;
+      margin: auto;
+      background-color: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    h2 {
+      color: #ffffff;
+      border-bottom: 2px solid #555;
+      padding-bottom: 0.5rem;
+    }
+    canvas {
+      width: 100%;
+      max-width: 100%;
+      background-color: #1c1f26;
+      border-radius: 8px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.3);
+    }
+    textarea {
+      width: 100%;
+      max-width: 100%;
+      background-color: #2a2f4a;
+      color: #e4e4e4;
+      border: 1px solid #444;
+      border-radius: 5px;
+      padding: 0.5rem;
+    }
+    button {
+      background-color: #2a2f4a;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #3f456a;
+    }
     @media (max-width: 768px) {
       textarea { width: 100% !important; }
       nav { flex-direction: column; }
@@ -40,15 +81,19 @@
       gap: 1rem;
     }
     .kpi {
-      background: #fff;
+      background: rgba(255, 255, 255, 0.05);
       padding: 1rem 2rem;
-      border: 1px solid #ccc;
+      border: 1px solid #444;
       border-radius: 10px;
       flex: 1 1 200px;
       text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.4);
     }
-    .kpi h3 { margin: 0.5rem 0; font-size: 1.5rem; color: #2a2f4a; }
+    .kpi h3 {
+      margin: 0.5rem 0;
+      font-size: 1.5rem;
+      color: #ffffff;
+    }
   </style>
 </head>
 <body>
@@ -63,7 +108,7 @@
     <a href="#nlp">NLP Tool</a>
     <a href="#export">Export</a>
   </nav>
-  <section class="kpi-container">
+  <section class="kpi-container" id="summary">
     <div class="kpi">
       <strong>Total Bot Accounts</strong>
       <h3>198+</h3>
@@ -81,5 +126,5 @@
       <h3>84%</h3>
     </div>
   </section>
-
-<!-- Dashboard modules begin below -->
+</body>
+</html>
