@@ -12,7 +12,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.2.2"></script>
 
 <!-- Register the plugin (Chart 3+ requires explicit registration) -->
-<script src="js/dashboard.js"></script>  <!-- your own code that builds the charts -->
 
 <script>
   /* global Chart */
@@ -23,7 +22,10 @@ Chart.register(window.ChartAnnotation);
 
   <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.23.0/dist/cytoscape.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.4.0/cytoscape-dagre.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2"></script>
+ 
+<!-- Popper UMD build (required by Tippy) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+
   <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/light.css">
   <style>
@@ -225,5 +227,6 @@ Chart.register(window.ChartAnnotation);
       }
     });
   </script>
+    <script src="js/dashboard.js"></script>  <!-- your own code that builds the charts -->
 </body>
 </html>
