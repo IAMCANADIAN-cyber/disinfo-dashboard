@@ -12,9 +12,13 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.2.2"></script>
 
 <!-- Register the plugin (Chart 3+ requires explicit registration) -->
+<script src="js/dashboard.js"></script>  <!-- your own code that builds the charts -->
+
 <script>
   /* global Chart */
-  Chart.register(window['chartjs-plugin-annotation']);
+  /*  the plug‑in attaches itself to window.ChartAnnotation  */
+Chart.register(window.ChartAnnotation);
+  
 </script>
 
   <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.23.0/dist/cytoscape.min.js"></script>
