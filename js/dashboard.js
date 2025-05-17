@@ -9,17 +9,18 @@
   const $$$ = (selector, context = document) => context.querySelectorAll(selector);
 
   /*** 1.  NETWORK GRAPH (Cytoscape) **************************************/
-  function buildNetwork() {
-    console.log("Attempting to build network graph with animate:false...");
+  function buildNetwork() { // This should be the ONLY start of the buildNetwork function
+    console.log("Attempting to build network graph: instance creation first.");
     const cyContainer = $$('#cy');
     if (!cyContainer) {
       console.error("Cytoscape container #cy not found.");
       return;
     }
     try {
-      const cy = cytoscape({
+      const cy = cytoscape({ // DO NOT define layout here initially
         container: cyContainer,
-        elements: [
+        elements: [ 
+          // Your actual elements
           { data: { id: 'RT', label: 'RT News' } },
           { data: { id: 'GlobalResearch', label: 'Global Research' } },
           { data: { id: 'CanadaProud', label: 'Canada Proud' } },
@@ -30,7 +31,8 @@
           { data: { source: 'GlobalResearch', target: 'CanadaProud', label: 'Influences Narrative' } },
           { data: { source: 'GlobalResearch', target: 'RebelNews', label: 'Cited By' } }
         ],
-        style: [
+        style: [ 
+          // Your actual style
           {
             selector: 'node',
             style: {
@@ -58,51 +60,43 @@
               'text-rotation': 'autorotate'
             }
           }
-        ],
-        layout: {
-          name: 'cose',
-          padding: 10,
-          idealEdgeLength: 100,
-          nodeOverlap: 20,
-          refresh: 0, 
-          fit: true,
-          randomize: false,
-          componentSpacing: 100,
-          nodeRepulsion: 400000,
-          edgeElasticity: 100,
-          nestingFactor: 5,
-          gravity: 80,
-          numIter: 500,
-          initialTemp: 200,
-          coolingFactor: 0.95,
-          minTemp: 1.0,
-          animate: false // *** KEY CHANGE HERE ***
-        }
+        ]
+        // No layout property here initially
       });
       
-      console.log("Network graph instance created.");
+      console.log("Network graph instance created. Defining layout options now.");
 
-      // Listen for layout events
-      cy.on('layoutstart', function(event){
-        console.log('Cytoscape layout has STARTED.');
-      });
-      cy.on('layoutstop', function(event){
-        console.log('Cytoscape layout has STOPPED.');
-      });
+      // Define the layout options
+      const layoutOptions = {
+        name: 'cose',
+        padding: 10,
+        idealEdgeLength: 100,
+        nodeOverlap: 20,
+        refresh: 0, 
+        fit: true,
+        randomize: false,
+        componentSpacing: 100,
+        nodeRepulsion: 400000,
+        edgeElasticity: 100,
+        nestingFactor: 5,
+        gravity: 80,
+        numIter: 500, 
+        initialTemp: 200,
+        coolingFactor: 0.95,
+        minTemp: 1.0,
+        animate: false, // Keep this false
+        ready: function(){ console.log('Cytoscape layout is READY (started).'); },
+        stop: function(){ console.log('Cytoscape layout has STOPPED.'); }
+      };
       
-      // It's common to run the layout after defining it
-      // if it doesn't run automatically or if you want to re-run.
-      // However, Cytoscape usually runs the specified layout on init.
-      // If issues persist, explicitly calling .run() might be needed,
-      // but let's see if animate:false fixes it first.
-      // cy.layout({ name: 'cose', ...same options... }).run();
-
+      console.log("Applying layout to network graph...");
+      cy.layout(layoutOptions).run(); // Explicitly run the layout
 
       return cy;
     } catch (e) {
       console.error("Error initializing Cytoscape:", e);
     }
-  }
+  } // <<<< This is the correct end for the buildNetwork function
 
   /*** 2.  TIMELINE CHART (Chart.js) ***************************************/
   function buildTimeline() {
