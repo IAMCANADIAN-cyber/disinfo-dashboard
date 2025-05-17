@@ -10,7 +10,7 @@
 
   /*** 1.  NETWORK GRAPH (Cytoscape) **************************************/
   function buildNetwork() {
-    console.log("Attempting to build network graph...");
+    console.log("Attempting to build network graph with new layout optimizations...");
     const cyContainer = $$('#cy');
     if (!cyContainer) {
       console.error("Cytoscape container #cy not found.");
@@ -31,7 +31,7 @@
           { data: { source: 'GlobalResearch', target: 'RebelNews', label: 'Cited By' } }
         ],
         style: [
-          { 
+          {
             selector: 'node',
             style: {
               'label': 'data(label)',
@@ -44,10 +44,10 @@
               'height': '60px'
             }
           },
-          { 
+          {
             selector: 'edge',
-            style: { 
-              'line-color': '#ccc', 
+            style: {
+              'line-color': '#ccc',
               'width': 2,
               'target-arrow-shape': 'triangle',
               'target-arrow-color': '#ccc',
@@ -59,27 +59,41 @@
             }
           }
         ],
-        layout: { 
+        layout: {
           name: 'cose',
           padding: 10,
           idealEdgeLength: 100,
           nodeOverlap: 20,
-          refresh: 20, // How often to update the layout during iterations (lower for less frequent updates)
+          // OPTIMIZATIONS:
+          refresh: 0, // Update screen only when layout is done or significantly changed.
+                      // Was 20. 0 should be a big improvement for initial load.
           fit: true,
           randomize: false,
           componentSpacing: 100,
-          // CORRECTED THESE LINES:
-          nodeRepulsion: 400000,     // Changed from function to number
-          edgeElasticity: 100,      // Changed from function to number
+          nodeRepulsion: 400000,
+          edgeElasticity: 100,
           nestingFactor: 5,
           gravity: 80,
-          numIter: 1000,           // Number of iterations - can be reduced if performance is an issue
+          numIter: 500, // Reduced from 1000. Layout will be faster.
           initialTemp: 200,
-          coolingFactor: 0.95,     // Value between 0 and 1
-          minTemp: 1.0
+          coolingFactor: 0.95,
+          minTemp: 1.0,
+          // animate: false // As a last resort, disable animation during layout.
+                           // true by default for cose. For cose-bilkent it's 'end'.
+                           // If set to false, might also need to adjust refresh.
         }
       });
       console.log("Network graph built successfully.");
+
+      // Optional: Listen for layout stop to confirm it finishes
+      cy.on('layoutstop', function(){
+        console.log('Cytoscape layout has stopped.');
+      });
+      cy.on('layoutstart', function(){
+        console.log('Cytoscape layout has started.');
+      });
+
+
       return cy;
     } catch (e) {
       console.error("Error initializing Cytoscape:", e);
@@ -115,9 +129,12 @@
             tension: 0.4
           }]
         },
-        options: { 
+        options: {
           responsive: true,
           maintainAspectRatio: false,
+          animation: { // Reduce chart.js animation intensity if needed
+            duration: 500 // default is 1000ms
+          },
           scales: {
             y: {
               beginAtZero: true,
@@ -162,9 +179,12 @@
             borderWidth: 1
           }]
         },
-        options: { 
-          responsive: true, 
+        options: {
+          responsive: true,
           maintainAspectRatio: false,
+          animation: { // Reduce chart.js animation intensity if needed
+            duration: 500 // default is 1000ms
+          },
           scales: {
             y: {
               beginAtZero: true,
@@ -193,8 +213,8 @@
     console.log("Attempting to enable tooltips...");
     try {
       if (typeof tippy === 'function') {
-        tippy('.tooltip-icon', { 
-            theme: 'light', 
+        tippy('.tooltip-.icon', {
+            theme: 'light',
             animation: 'scale',
             allowHTML: true
         });
@@ -215,7 +235,7 @@
         console.error("NLP section #nlp not found.");
         return;
     }
-    const textAreas = $$$('textarea', nlpSection); // Corrected to get both textareas
+    const textAreas = $$$('textarea', nlpSection);
     const compareButton = $$('button', nlpSection);
 
     if (textAreas.length < 2 || !compareButton) {
@@ -223,7 +243,6 @@
         return;
     }
     const [leftTextArea, rightTextArea] = textAreas;
-
 
     compareButton.addEventListener('click', () => {
       const text1 = leftTextArea.value;
@@ -245,7 +264,7 @@
       return;
     }
     dashboardInitialized = true;
-    
+
     console.log("DOM fully loaded and parsed. Initializing dashboard components...");
     try {
       buildNetwork();
