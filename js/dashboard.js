@@ -10,7 +10,7 @@
 
   /*** 1.  NETWORK GRAPH (Cytoscape) **************************************/
   function buildNetwork() {
-    console.log("Attempting to build network graph with new layout optimizations...");
+    console.log("Attempting to build network graph with animate:false...");
     const cyContainer = $$('#cy');
     if (!cyContainer) {
       console.error("Cytoscape container #cy not found.");
@@ -64,9 +64,7 @@
           padding: 10,
           idealEdgeLength: 100,
           nodeOverlap: 20,
-          // OPTIMIZATIONS:
-          refresh: 0, // Update screen only when layout is done or significantly changed.
-                      // Was 20. 0 should be a big improvement for initial load.
+          refresh: 0, 
           fit: true,
           randomize: false,
           componentSpacing: 100,
@@ -74,24 +72,30 @@
           edgeElasticity: 100,
           nestingFactor: 5,
           gravity: 80,
-          numIter: 500, // Reduced from 1000. Layout will be faster.
+          numIter: 500,
           initialTemp: 200,
           coolingFactor: 0.95,
           minTemp: 1.0,
-          // animate: false // As a last resort, disable animation during layout.
-                           // true by default for cose. For cose-bilkent it's 'end'.
-                           // If set to false, might also need to adjust refresh.
+          animate: false // *** KEY CHANGE HERE ***
         }
       });
-      console.log("Network graph built successfully.");
+      
+      console.log("Network graph instance created.");
 
-      // Optional: Listen for layout stop to confirm it finishes
-      cy.on('layoutstop', function(){
-        console.log('Cytoscape layout has stopped.');
+      // Listen for layout events
+      cy.on('layoutstart', function(event){
+        console.log('Cytoscape layout has STARTED.');
       });
-      cy.on('layoutstart', function(){
-        console.log('Cytoscape layout has started.');
+      cy.on('layoutstop', function(event){
+        console.log('Cytoscape layout has STOPPED.');
       });
+      
+      // It's common to run the layout after defining it
+      // if it doesn't run automatically or if you want to re-run.
+      // However, Cytoscape usually runs the specified layout on init.
+      // If issues persist, explicitly calling .run() might be needed,
+      // but let's see if animate:false fixes it first.
+      // cy.layout({ name: 'cose', ...same options... }).run();
 
 
       return cy;
@@ -132,8 +136,8 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          animation: { // Reduce chart.js animation intensity if needed
-            duration: 500 // default is 1000ms
+          animation: { 
+            duration: 500 
           },
           scales: {
             y: {
@@ -182,8 +186,8 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          animation: { // Reduce chart.js animation intensity if needed
-            duration: 500 // default is 1000ms
+          animation: { 
+            duration: 500 
           },
           scales: {
             y: {
@@ -213,7 +217,8 @@
     console.log("Attempting to enable tooltips...");
     try {
       if (typeof tippy === 'function') {
-        tippy('.tooltip-.icon', {
+        // Corrected selector:
+        tippy('.tooltip-icon', { 
             theme: 'light',
             animation: 'scale',
             allowHTML: true
@@ -267,7 +272,7 @@
 
     console.log("DOM fully loaded and parsed. Initializing dashboard components...");
     try {
-      buildNetwork();
+      buildNetwork(); // This will now try with animate:false
       buildTimeline();
       buildBotHeatmap();
       enableTooltips();
