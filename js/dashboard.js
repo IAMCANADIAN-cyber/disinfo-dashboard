@@ -1,14 +1,16 @@
 /* js/dashboard.js */
 
 (function () {
+  /*** GLOBAL INITIALIZATION FLAG ****************************************/
+  let dashboardInitialized = false;
+
   /*** SHARED UTILITIES ***************************************************/
-  // Helper to select DOM elements
   const $$ = (selector, context = document) => context.querySelector(selector);
   const $$$ = (selector, context = document) => context.querySelectorAll(selector);
 
-
   /*** 1.  NETWORK GRAPH (Cytoscape) **************************************/
   function buildNetwork() {
+    console.log("Attempting to build network graph...");
     const cyContainer = $$('#cy');
     if (!cyContainer) {
       console.error("Cytoscape container #cy not found.");
@@ -32,14 +34,14 @@
           { 
             selector: 'node',
             style: {
-              'label': 'data(label)', // Use 'data(label)' for node text
+              'label': 'data(label)',
               'background-color': '#4caf50',
-              'color': '#fff', // Text color for the label
+              'color': '#fff',
               'text-valign': 'center',
               'text-halign': 'center',
               'font-size': '10px',
-              'width': '60px', // Adjust node size
-              'height': '60px' // Adjust node size
+              'width': '60px',
+              'height': '60px'
             }
           },
           { 
@@ -47,10 +49,10 @@
             style: { 
               'line-color': '#ccc', 
               'width': 2,
-              'target-arrow-shape': 'triangle', // Add arrows to edges
+              'target-arrow-shape': 'triangle',
               'target-arrow-color': '#ccc',
-              'curve-style': 'bezier', // Make edges curved for better readability
-              'label': 'data(label)', // Display edge labels
+              'curve-style': 'bezier',
+              'label': 'data(label)',
               'font-size': '8px',
               'color': '#fff',
               'text-rotation': 'autorotate'
@@ -58,26 +60,26 @@
           }
         ],
         layout: { 
-          name: 'cose', //cose layout often works well for complex graphs
-          // name: 'circle', // As per original
-          // name: 'dagre', // If using cytoscape-dagre, ensure it's initialized if needed
+          name: 'cose',
           padding: 10,
           idealEdgeLength: 100,
           nodeOverlap: 20,
-          refresh: 20,
+          refresh: 20, // How often to update the layout during iterations (lower for less frequent updates)
           fit: true,
           randomize: false,
           componentSpacing: 100,
-          nodeRepulsion: function( node ){ return 400000; },
-          edgeElasticity: function( edge ){ return 100; },
+          // CORRECTED THESE LINES:
+          nodeRepulsion: 400000,     // Changed from function to number
+          edgeElasticity: 100,      // Changed from function to number
           nestingFactor: 5,
           gravity: 80,
-          numIter: 1000,
+          numIter: 1000,           // Number of iterations - can be reduced if performance is an issue
           initialTemp: 200,
-          coolingFactor: 0.95,
+          coolingFactor: 0.95,     // Value between 0 and 1
           minTemp: 1.0
         }
       });
+      console.log("Network graph built successfully.");
       return cy;
     } catch (e) {
       console.error("Error initializing Cytoscape:", e);
@@ -86,13 +88,14 @@
 
   /*** 2.  TIMELINE CHART (Chart.js) ***************************************/
   function buildTimeline() {
+    console.log("Attempting to build timeline chart...");
     const timelineCtx = $$('#timelineChart');
     if (!timelineCtx) {
       console.error("Timeline chart canvas #timelineChart not found.");
       return;
     }
     try {
-      return new Chart(timelineCtx, {
+      const chart = new Chart(timelineCtx, {
         type: 'line',
         data: {
           labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
@@ -114,7 +117,7 @@
         },
         options: { 
           responsive: true,
-          maintainAspectRatio: false, // Allow chart to not maintain aspect ratio
+          maintainAspectRatio: false,
           scales: {
             y: {
               beginAtZero: true,
@@ -131,6 +134,8 @@
           }
         }
       });
+      console.log("Timeline chart built successfully.");
+      return chart;
     } catch (e) {
       console.error("Error initializing Timeline Chart:", e);
     }
@@ -138,13 +143,14 @@
 
   /*** 3.  BOT ACTIVITY HEATMAP (Chart.js Bar Chart) ************************/
   function buildBotHeatmap() {
+    console.log("Attempting to build bot heatmap chart...");
     const heatmapCtx = $$('#botHeatmap');
     if (!heatmapCtx) {
       console.error("Bot heatmap canvas #botHeatmap not found.");
       return;
     }
     try {
-      return new Chart(heatmapCtx, {
+      const chart = new Chart(heatmapCtx, {
         type: 'bar',
         data: {
           labels: ['12 AM','3 AM','6 AM','9 AM','12 PM','3 PM','6 PM','9 PM'],
@@ -167,7 +173,7 @@
             },
             x: {
               ticks: { color: '#e4e4e4' },
-              grid: { display: false } // Hide X-axis grid lines for bar chart if preferred
+              grid: { display: false }
             }
           },
           plugins: {
@@ -175,6 +181,8 @@
           }
         }
       });
+      console.log("Bot heatmap chart built successfully.");
+      return chart;
     } catch (e) {
       console.error("Error initializing Bot Heatmap Chart:", e);
     }
@@ -182,13 +190,15 @@
 
   /*** 4.  TOOL-TIPS (Tippy.js) ********************************************/
   function enableTooltips() {
+    console.log("Attempting to enable tooltips...");
     try {
       if (typeof tippy === 'function') {
         tippy('.tooltip-icon', { 
             theme: 'light', 
             animation: 'scale',
-            allowHTML: true // If data-tippy-content contains HTML
+            allowHTML: true
         });
+        console.log("Tooltips enabled successfully.");
       } else {
         console.warn('Tippy.js not loaded – tool-tips disabled');
       }
@@ -199,18 +209,21 @@
 
   /*** 5.  NLP COMPARE BUTTON *********************************************/
   function wireNlpCompare() {
+    console.log("Attempting to wire NLP compare button...");
     const nlpSection = $$('#nlp');
     if (!nlpSection) {
         console.error("NLP section #nlp not found.");
         return;
     }
-    const [leftTextArea, rightTextArea] = $$$('textarea', nlpSection);
+    const textAreas = $$$('textarea', nlpSection); // Corrected to get both textareas
     const compareButton = $$('button', nlpSection);
 
-    if (!leftTextArea || !rightTextArea || !compareButton) {
-        console.error("Could not find all elements for NLP comparison.");
+    if (textAreas.length < 2 || !compareButton) {
+        console.error("Could not find all elements for NLP comparison (needs 2 textareas and 1 button).");
         return;
     }
+    const [leftTextArea, rightTextArea] = textAreas;
+
 
     compareButton.addEventListener('click', () => {
       const text1 = leftTextArea.value;
@@ -219,26 +232,31 @@
         alert("Please paste text into both areas for comparison.");
         return;
       }
-      // Placeholder for actual NLP comparison
       const similarityScore = (Math.random() * 100).toFixed(1);
       alert(`🤖 (Placeholder) Narrative Similarity Score: ${similarityScore}%\n\nComparing:\nText 1: "${text1.substring(0,30)}..."\nText 2: "${text2.substring(0,30)}..."`);
-      // TODO: Replace with a real NLP back-end call or client-side library
     });
+    console.log("NLP compare button wired successfully.");
   }
 
   /*** 6.  INITIALIZE ALL COMPONENTS ON DOMREADY *********************************/
   document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM fully loaded and parsed. Initializing dashboard components.");
+    if (dashboardInitialized) {
+      console.warn("Dashboard already initialized. Skipping duplicate initialization.");
+      return;
+    }
+    dashboardInitialized = true;
+    
+    console.log("DOM fully loaded and parsed. Initializing dashboard components...");
     try {
       buildNetwork();
       buildTimeline();
       buildBotHeatmap();
       enableTooltips();
       wireNlpCompare();
-      console.log("Dashboard components initialization attempted.");
+      console.log("Dashboard components initialization process completed.");
     } catch (e) {
-      console.error("Error during dashboard initialization:", e);
+      console.error("Critical error during dashboard components initialization:", e);
     }
   });
 
-})(); // IIFE to avoid polluting global scope
+})();
