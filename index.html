@@ -6,19 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Disinfo Influence Dashboard</title>
 
-  <!-- Chart.js v4 (locked) -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <!-- Annotation plugin v2.x – compatible with Chart 3/4 -->
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.2.2"></script>
   <!-- Register the plugin (Chart 3+ requires explicit registration) -->
   <script>
-    /* global Chart */
-    // The plugin attaches itself to window.ChartAnnotation
-    if (window.ChartAnnotation) {
-      Chart.register(window.ChartAnnotation);
-    } else {
-      console.error("ChartAnnotation plugin not found on window object.");
-    }
+    document.addEventListener('DOMContentLoaded', function() { // Defer this registration
+      /* global Chart */
+      if (window.Chart && window.ChartAnnotation) {
+        Chart.register(window.ChartAnnotation);
+        console.log("ChartAnnotation plugin registered successfully via DOMContentLoaded.");
+      } else {
+        console.error("ChartAnnotation plugin or Chart.js not found on window object during DOMContentLoaded registration.");
+        if (!window.Chart) console.error("Chart.js (Chart) is missing.");
+        if (!window.ChartAnnotation) console.error("chartjs-plugin-annotation (ChartAnnotation) is missing.");
+      }
+    });
   </script>
 
   <!-- Cytoscape & helpers -->
